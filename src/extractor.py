@@ -1,16 +1,16 @@
 from bs4 import BeautifulSoup
 from typing import List, Dict
 from downloader import scarica_pagina_mimit
-
+from config import REGIONE, TABELLA_REGIONE
 
 def estrai_prezzi_lombardia(html: str) -> List[Dict[str, str]]:
     soup = BeautifulSoup(html, "html.parser")
     tabelle = soup.find_all("table")
 
-    if len(tabelle) < 9:
-        raise Exception("⚠️ Tabella Lombardia non trovata.")
+    if len(tabelle) < TABELLA_REGIONE:
+        raise Exception(f"⚠️ Tabella {REGIONE} non trovata.")
 
-    tabella = tabelle[8]  # Lombardia
+    tabella = tabelle[TABELLA_REGIONE] # Indice della tabella per la Lombardia
     righe = tabella.find_all("tr")
 
     risultati = []
@@ -44,9 +44,9 @@ def prezzi_to_html(dati: List[Dict[str, str]]) -> str:
             th { background-color: #f0f8ff; }
         </style>
     </head>
-    <body>
-        <h2>⛽ Prezzi medi dei carburanti in Lombardia</h2>
-        <table>
+    <body>"""
+    html +=f"<h2>⛽ Prezzi medi dei carburanti in {REGIONE}</h2>"
+    html +="""<table>
             <thead>
                 <tr>
                     <th>Carburante</th>

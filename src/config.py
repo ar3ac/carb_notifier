@@ -5,6 +5,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+REGIONE = "Lombardia"
+TABELLA_REGIONE = 8
+
 
 EMAIL_CONFIG = {
     "sender": os.getenv("EMAIL_SENDER"),
