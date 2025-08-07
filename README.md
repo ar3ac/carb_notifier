@@ -7,7 +7,7 @@ Uno strumento automatizzato per estrarre i **prezzi medi giornalieri dei carbura
 
 ## 📌 Funzionalità
 
-- Scarica l'ultimo PDF pubblicato con i prezzi medi aggiornati
+- Consulta i prezzi medi aggiornati del carburante
 - Estrae i dati della regione configurata (es. Lombardia)
 - Genera una **tabella HTML** pulita e leggibile con i prezzi di: Gasolio, Benzina, GPL, Metano
 - Invia l'email automaticamente al destinatario configurato
