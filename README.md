@@ -86,7 +86,7 @@ carb_notifier/
 
 ## 🔒 Sicurezza
 
-- Le credenziali sono gestite tramite `.env` (mai caricarlo su GitHub!)
+- Le credenziali sono gestite tramite `.env`
 - Il file `.env.example` ti aiuta a preparare un `.env` valido
 
 ---
