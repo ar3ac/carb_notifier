@@ -1,14 +1,13 @@
-name: Prova Actions
+name: Hello
 on:
-  workflow_dispatch: {}   # abilita il bottone "Run workflow" nella tab Actions
+  push:
+    branches:
+      - main         # <-- se il tuo branch di default è diverso, metti quello
+  workflow_dispatch: {}  # abilita il bottone "Run workflow"
 
 jobs:
-  run:
+  hello:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-      - run: python -c "print('Ciao da GitHub Actions!')"
+      - run: echo "Ciao da GitHub Actions"
 
