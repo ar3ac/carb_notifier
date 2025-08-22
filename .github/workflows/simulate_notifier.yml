@@ -33,9 +33,9 @@ jobs:
           REGIONE = os.getenv("REGIONE", "Lombardia")
           DATA_SOURCE = os.getenv("DATA_SOURCE", "csv").lower()
 
-          from extractor import estrai_prezzi_lombardia, prezzi_to_html
-          from downloader import scarica_pagina_mimit
-          from csv_extractor import estrai_prezzi_da_csv
+          from src.extractor import estrai_prezzi_lombardia, prezzi_to_html
+          from src.downloader import scarica_pagina_mimit
+          from src.csv_extractor import estrai_prezzi_da_csv
 
           print(f"[INFO] Simulazione | REGIONE={REGIONE} | DATA_SOURCE={DATA_SOURCE}")
 
