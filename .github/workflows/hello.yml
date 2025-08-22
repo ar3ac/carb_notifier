@@ -1,6 +1,7 @@
 name: Prova Actions
 on:
-  workflow_dispatch:  # lo lanci a mano dal tab "Actions"
+  workflow_dispatch: {}   # abilita il bottone "Run workflow" nella tab Actions
+
 jobs:
   run:
     runs-on: ubuntu-latest
@@ -10,3 +11,4 @@ jobs:
         with:
           python-version: "3.11"
       - run: python -c "print('Ciao da GitHub Actions!')"
+
