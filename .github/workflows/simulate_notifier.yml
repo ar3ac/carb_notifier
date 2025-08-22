@@ -4,8 +4,6 @@ on:
   workflow_dispatch: {}     # bottone "Run workflow"
   push:                     # parte subito al prossimo commit su main
     branches: [ main ]
-  schedule:
-    - cron: "5 5 * * *"     # 05:05 UTC ≈ 07:05 d’estate in Italia
 
 jobs:
   simulate:

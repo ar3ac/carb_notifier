@@ -10,7 +10,6 @@ Uno strumento automatizzato per estrarre i **prezzi medi giornalieri dei carbura
 - Estrae i dati della regione configurata (es. Lombardia)
 - Genera una **tabella HTML** pulita e leggibile con i prezzi di: Gasolio, Benzina, GPL, Metano
 - Invia l'email automaticamente al destinatario configurato
-- Scegli la fonte dati (HTML o CSV ufficiale) tramite `.env`
 
 ---
 
@@ -22,43 +21,32 @@ Uno strumento automatizzato per estrarre i **prezzi medi giornalieri dei carbura
 
 ---
 
-## 🚀 Esecuzione
+## 🚀 Esecuzione locale
 
-1) **Clona il repository**
+1. Clona il repository:
+   ```bash
+   git clone https://github.com/ar3ac/carb_notifier.git
+   cd carb_notifier
+   ```
 
-```bash
-# HTTPS
-git clone https://github.com/ar3ac/carb_notifier.git
-cd carb_notifier
+2. Crea e attiva un ambiente virtuale:
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # Linux/macOS
+   venv\Scripts\activate     # Windows
+   ```
 
-# Oppure via SSH
-# git clone git@github.com:ar3ac/carb_notifier.git
-# cd carb_notifier
-```
+3. Installa le dipendenze:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-2) **Crea e attiva un ambiente virtuale**
+4. Crea un file `.env` partendo da `.env.example` e compila i campi richiesti
 
-```bash
-python -m venv venv
-# Linux/macOS
-source venv/bin/activate
-# Windows
-# venv\Scripts\activate
-```
-
-3) **Installa le dipendenze**
-
-```bash
-pip install -r requirements.txt
-```
-
-4) **Crea `.env`** partendo da `.env.example` e compila i campi richiesti
-
-5) **Avvia lo script**
-
-```bash
-python main.py
-```
+5. Avvia lo script:
+   ```bash
+   python main.py
+   ```
 
 Riceverai un'email con la tabella HTML dei prezzi medi dei carburanti.
 
@@ -66,24 +54,14 @@ Riceverai un'email con la tabella HTML dei prezzi medi dei carburanti.
 
 ## 🔧 Configurazione
 
-### Variabili principali (`.env`)
+Nel file `src/config.py` puoi impostare:
 
-```ini
-REGIONE=Lombardia
-DATA_SOURCE=csv      # "csv" per CSV ufficiale MIMIT, "html" per parsing pagina web
-EMAIL_USER=tuo@email.it
-EMAIL_PASS=tuapassword
-EMAIL_TO=destinatario@email.it
-SMTP_SERVER=smtp.gmail.com
-SMTP_PORT=587
-
-# Opzionale: log anche su file
-# LOG_FILE=carb_notifier.log
+```python
+REGIONE = "Lombardia"       # Regione da estrarre
+TABELLA_REGIONE = 8         # Indice tabella corrispondente nella pagina HTML ufficiale (se usi l'estrazione via HTML)
 ```
 
-### Altre opzioni (`src/config.py`)
-
-- `TABELLA_REGIONE`: indice tabella **solo** se usi `html` come fonte dati.
+Puoi anche modificare l’oggetto e i destinatari email nel dizionario `EMAIL_CONFIG` all’interno dello stesso file.
 
 ---
 
@@ -117,40 +95,45 @@ carb_notifier/
 
 ## ⏱️ Automazione
 
-Puoi programmare l’esecuzione automatica dello script ogni giorno usando **cron** (Linux/Raspberry) o **Operazioni pianificate** (Windows).
-
-### Esempio con `cron` (Linux/Raspberry Pi)
+### Con cron (Linux/Raspberry Pi)
+Puoi programmare l’esecuzione automatica dello script ogni giorno:
 
 ```bash
 crontab -e
 ```
 
-Aggiungi una riga:
-
+E aggiungi:
 ```bash
 30 7 * * * /usr/bin/python3 /percorso/assoluto/carb_notifier/main.py >> /var/log/carb_notifier.log 2>&1
 ```
 
-- `30 7 * * *` → orario (7:30 del mattino)
-- `/usr/bin/python3` → percorso al tuo interprete Python
-- `/percorso/assoluto/carb_notifier/main.py` → percorso al tuo script
-- `>> /var/log/carb_notifier.log 2>&1` → salva i log (utile per debug)
-
-### Windows (Operazioni pianificate)
-
-Apri Task Scheduler → Crea una nuova attività pianificata → Imposta l’orario desiderato
-
-Comando da eseguire:
-
+### Con Windows (Operazioni pianificate)
+Imposta una nuova attività e come comando usa:
 ```bash
 python C:\percorso\carb_notifier\main.py
 ```
 
 ---
 
-## 📬 Esempio email ricevuta
+## 🚀 GitHub Actions (CI)
 
-L’email ricevuta conterrà una tabella simile a questa, in formato HTML:
+Il progetto include un workflow **GitHub Actions** che permette di simulare l’esecuzione senza inviare email.  
+In questo modo chi clona il repo può testarlo direttamente su GitHub.
+
+- File workflow: `.github/workflows/simulate_notifier.yml`
+- Trigger:
+  - manuale con **Run workflow** dalla tab *Actions*
+  - automatico al push su `main`
+
+### Come usarlo
+1. Vai su **Actions** nel tuo repository
+2. Seleziona il workflow *Simulate carb_notifier (no email)*
+3. Premi **Run workflow**
+4. Controlla i log per vedere i prezzi estratti e l’anteprima HTML generata
+
+---
+
+## 📬 Esempio email ricevuta
 
 | Carburante | Tipo     | Prezzo |
 |------------|----------|--------|
@@ -166,7 +149,6 @@ L’email ricevuta conterrà una tabella simile a questa, in formato HTML:
 - Supporto a più regioni
 - Invio su Telegram
 - Salvataggio storico in CSV o database
-- Integrazione con GitHub Actions per invio automatizzato
 
 ---
 
