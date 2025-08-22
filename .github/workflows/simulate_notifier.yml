@@ -1,0 +1,66 @@
+name: Simulate carb_notifier (no email)
+
+on:
+  schedule:
+    - cron: "5 5 * * *"   # 05:05 UTC ≈ 07:05 in Italia d’estate / 06:05 d’inverno
+  workflow_dispatch: {}
+
+jobs:
+  simulate:
+    runs-on: ubuntu-latest
+
+    env:
+      # === Config simulazione ===
+      REGIONE: "Lombardia"
+      DATA_SOURCE: "csv"   # "csv" oppure "html"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install requirements
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Run simulation (no email sent)
+        run: |
+          python - <<'PY'
+          import os, sys
+          from pathlib import Path
+
+          root = Path(__file__).resolve().parents[2]
+          sys.path.append(str(root / "src"))
+
+          REGIONE = os.getenv("REGIONE", "Lombardia")
+          DATA_SOURCE = os.getenv("DATA_SOURCE", "csv").lower()
+
+          from extractor import estrai_prezzi_lombardia, prezzi_to_html
+          from downloader import scarica_pagina_mimit
+          from csv_extractor import estrai_prezzi_da_csv
+
+          print(f"[INFO] Simulazione carb_notifier | REGIONE={REGIONE} | DATA_SOURCE={DATA_SOURCE}")
+
+          if DATA_SOURCE == "csv":
+            dati = estrai_prezzi_da_csv(REGIONE)
+          elif DATA_SOURCE == "html":
+            html = scarica_pagina_mimit()
+            dati = estrai_prezzi_lombardia(html)
+          else:
+            raise SystemExit(f"DATA_SOURCE non valido: {DATA_SOURCE}")
+
+          # riepilogo “compatto” per log
+          compatti = []
+          for v in dati:
+            compatti.append(f"{v['carburante']} {v['tipo'] or ''}={v['prezzo']}".strip())
+          print("[INFO] Prezzi estratti:", ", ".join(compatti))
+
+          html_email = prezzi_to_html(dati)
+          print("[INFO] HTML generato. Lunghezza:", len(html_email))
+          print("[INFO] SIMULAZIONE COMPLETATA (nessuna email inviata)")
+          PY
