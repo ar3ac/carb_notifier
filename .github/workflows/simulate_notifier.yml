@@ -13,6 +13,7 @@ jobs:
     env:
       REGIONE: "Lombardia"
       DATA_SOURCE: "csv"
+      PYTHONPATH: ${{ github.workspace }}/src   # <-- QUI
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -25,17 +26,14 @@ jobs:
       - name: Run simulation (no email sent)
         run: |
           python - <<'PY'
-          import os, sys
-          from pathlib import Path
-          root = Path(__file__).resolve().parents[2]
-          sys.path.append(str(root / "src"))
+          import os
 
           REGIONE = os.getenv("REGIONE", "Lombardia")
           DATA_SOURCE = os.getenv("DATA_SOURCE", "csv").lower()
 
-          from src.extractor import estrai_prezzi_lombardia, prezzi_to_html
-          from src.downloader import scarica_pagina_mimit
-          from src.csv_extractor import estrai_prezzi_da_csv
+          from extractor import estrai_prezzi_lombardia, prezzi_to_html
+          from downloader import scarica_pagina_mimit
+          from csv_extractor import estrai_prezzi_da_csv
 
           print(f"[INFO] Simulazione | REGIONE={REGIONE} | DATA_SOURCE={DATA_SOURCE}")
 
