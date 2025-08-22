@@ -1,0 +1,12 @@
+name: Hello
+on:
+  push:
+    branches:
+      - main         # <-- se il tuo branch di default è diverso, metti quello
+  workflow_dispatch: {}  # abilita il bottone "Run workflow"
+
+jobs:
+  hello:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Ciao da GitHub Actions"
