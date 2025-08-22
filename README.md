@@ -24,23 +24,38 @@ Uno strumento automatizzato per estrarre i **prezzi medi giornalieri dei carbura
 
 ## 🚀 Esecuzione
 
-1. Clona il repository
-2. Crea e attiva un ambiente virtuale:
+1) **Clona il repository**
+
+```bash
+# HTTPS
+git clone https://github.com/ar3ac/carb_notifier.git
+cd carb_notifier
+
+# Oppure via SSH
+# git clone git@github.com:ar3ac/carb_notifier.git
+# cd carb_notifier
+```
+
+2) **Crea e attiva un ambiente virtuale**
 
 ```bash
 python -m venv venv
-source venv/bin/activate  # Linux/macOS
-venv\Scripts\activate   # Windows
+# Linux/macOS
+source venv/bin/activate
+# Windows
+# venv\Scripts\activate
 ```
 
-3. Installa le dipendenze:
+3) **Installa le dipendenze**
+
 ```bash
 pip install -r requirements.txt
 ```
 
-4. Crea un file `.env` partendo da `.env.example` e compila i campi richiesti
+4) **Crea `.env`** partendo da `.env.example` e compila i campi richiesti
 
-5. Avvia lo script:
+5) **Avvia lo script**
+
 ```bash
 python main.py
 ```
@@ -61,12 +76,14 @@ EMAIL_PASS=tuapassword
 EMAIL_TO=destinatario@email.it
 SMTP_SERVER=smtp.gmail.com
 SMTP_PORT=587
+
+# Opzionale: log anche su file
+# LOG_FILE=carb_notifier.log
 ```
 
 ### Altre opzioni (`src/config.py`)
 
-- `TABELLA_REGIONE`: indice tabella solo se usi `html` come fonte dati.
-- Logging opzionale: puoi abilitare il salvataggio su file log.
+- `TABELLA_REGIONE`: indice tabella **solo** se usi `html` come fonte dati.
 
 ---
 
@@ -100,14 +117,16 @@ carb_notifier/
 
 ## ⏱️ Automazione
 
-Puoi programmare l’esecuzione automatica dello script ogni giorno usando cron (Linux/macOS) o Operazioni pianificate (Windows).
+Puoi programmare l’esecuzione automatica dello script ogni giorno usando **cron** (Linux/Raspberry) o **Operazioni pianificate** (Windows).
 
-### Esempio con cron (Linux/Raspberry Pi)
+### Esempio con `cron` (Linux/Raspberry Pi)
+
 ```bash
 crontab -e
 ```
 
 Aggiungi una riga:
+
 ```bash
 30 7 * * * /usr/bin/python3 /percorso/assoluto/carb_notifier/main.py >> /var/log/carb_notifier.log 2>&1
 ```
@@ -122,6 +141,7 @@ Aggiungi una riga:
 Apri Task Scheduler → Crea una nuova attività pianificata → Imposta l’orario desiderato
 
 Comando da eseguire:
+
 ```bash
 python C:\percorso\carb_notifier\main.py
 ```
