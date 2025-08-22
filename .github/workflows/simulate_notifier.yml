@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       REGIONE: "Lombardia"
+      TABELLA_REGIONE: "8"
       DATA_SOURCE: "csv"
       PYTHONPATH: ${{ github.workspace }}/src   # <-- QUI
     steps:
