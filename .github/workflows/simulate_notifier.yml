@@ -1,39 +1,32 @@
 name: Simulate carb_notifier (no email)
 
 on:
+  workflow_dispatch: {}     # bottone "Run workflow"
+  push:                     # parte subito al prossimo commit su main
+    branches: [ main ]
   schedule:
-    - cron: "5 5 * * *"   # 05:05 UTC ≈ 07:05 in Italia d’estate / 06:05 d’inverno
-  workflow_dispatch: {}
+    - cron: "5 5 * * *"     # 05:05 UTC ≈ 07:05 d’estate in Italia
 
 jobs:
   simulate:
     runs-on: ubuntu-latest
-
     env:
-      # === Config simulazione ===
       REGIONE: "Lombardia"
-      DATA_SOURCE: "csv"   # "csv" oppure "html"
-
+      DATA_SOURCE: "csv"
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-
       - name: Install requirements
         run: |
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-
       - name: Run simulation (no email sent)
         run: |
           python - <<'PY'
           import os, sys
           from pathlib import Path
-
           root = Path(__file__).resolve().parents[2]
           sys.path.append(str(root / "src"))
 
@@ -44,7 +37,7 @@ jobs:
           from downloader import scarica_pagina_mimit
           from csv_extractor import estrai_prezzi_da_csv
 
-          print(f"[INFO] Simulazione carb_notifier | REGIONE={REGIONE} | DATA_SOURCE={DATA_SOURCE}")
+          print(f"[INFO] Simulazione | REGIONE={REGIONE} | DATA_SOURCE={DATA_SOURCE}")
 
           if DATA_SOURCE == "csv":
             dati = estrai_prezzi_da_csv(REGIONE)
@@ -54,13 +47,10 @@ jobs:
           else:
             raise SystemExit(f"DATA_SOURCE non valido: {DATA_SOURCE}")
 
-          # riepilogo “compatto” per log
-          compatti = []
-          for v in dati:
-            compatti.append(f"{v['carburante']} {v['tipo'] or ''}={v['prezzo']}".strip())
-          print("[INFO] Prezzi estratti:", ", ".join(compatti))
+          compatti = [f"{v['carburante']} {v['tipo'] or ''}={v['prezzo']}".strip() for v in dati]
+          print("[INFO] Prezzi:", ", ".join(compatti))
 
           html_email = prezzi_to_html(dati)
-          print("[INFO] HTML generato. Lunghezza:", len(html_email))
+          print("[INFO] HTML len:", len(html_email))
           print("[INFO] SIMULAZIONE COMPLETATA (nessuna email inviata)")
           PY
