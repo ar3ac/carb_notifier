@@ -55,7 +55,7 @@ Nel file `src/config.py` puoi impostare:
 
 ```python
 REGIONE = "Lombardia"       # Regione da estrarre
-TABELLA_REGIONE = 8         # Indice della tabella corrispondente alla regione nel PDF
+TABELLA_REGIONE = 8         # Indice della tabella corrispondente alla regione nella pagina HTML ufficiale MIMIT
 ```
 
 Assicurati che il valore `TABELLA_REGIONE` corrisponda alla tabella giusta del PDF ufficiale del MIMIT.
@@ -89,6 +89,48 @@ carb_notifier/
 - Le credenziali sono gestite tramite `.env`
 - Il file `.env.example` ti aiuta a preparare un `.env` valido
 
+
+---
+## ⏱️ Automazione
+
+Puoi programmare l’esecuzione automatica dello script ogni giorno usando cron (Linux/macOS) o Operazioni pianificate (Windows).
+
+### Esempio con cron (Linux/Raspberry Pi)
+Apri il crontab:
+```bash
+
+crontab -e
+
+```
+
+Aggiungi una riga come questa per far girare lo script ogni giorno alle 7:30:
+```bash
+
+30 7 * * * /usr/bin/python3 /percorso/assoluto/carb_notifier/main.py >> /var/log/carb_notifier.log 2>&1
+
+```
+30 7 * * * → orario (7:30 del mattino)
+
+/usr/bin/python3 → percorso al tuo interprete Python
+
+/percorso/assoluto/carb_notifier/main.py → percorso al tuo script
+
+>> /var/log/carb_notifier.log 2>&1 → salva i log (utile per debug)
+
+### Windows (Operazioni pianificate)
+
+Apri Task Scheduler
+
+Crea una nuova attività pianificata
+
+Imposta l’orario desiderato
+
+Comando da eseguire:
+```bash
+
+python C:\percorso\carb_notifier\main.py
+
+```
 ---
 
 ## 📬 Esempio email ricevuta
