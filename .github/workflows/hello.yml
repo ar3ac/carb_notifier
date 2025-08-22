@@ -1,0 +1,12 @@
+name: Prova Actions
+on:
+  workflow_dispatch:  # lo lanci a mano dal tab "Actions"
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -c "print('Ciao da GitHub Actions!')"
